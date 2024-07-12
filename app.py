@@ -1,31 +1,21 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model, model_from_json
+from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adamax
 from PIL import Image
 import os
-
-# Function to correct dtypes in the model configuration
-def correct_dtypes(config):
-    for layer in config['layers']:
-        if 'dtype' in layer['config'] and isinstance(layer['config']['dtype'], tuple):
-            layer['config']['dtype'] = 'float32'  # or any appropriate dtype
-    return config
 
 # Load and compile the model
 model_path = 'forex.h5'
 
 try:
-    # Load model and correct configuration
     loaded_model = load_model(model_path, compile=False)
-    model_config = loaded_model.to_json()
-    corrected_config = correct_dtypes(tf.keras.models.model_from_json(model_config).get_config())
-    loaded_model = tf.keras.models.Model.from_config(corrected_config)
     loaded_model.compile(Adamax(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
     st.write("Model loaded and compiled successfully")
 except Exception as e:
     st.error(f"An error occurred while loading the model: {e}")
+    st.error(f"Exception details: {e.__class__.__name__}: {e}")
     loaded_model = None
 
 # Function to preprocess the image
