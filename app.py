@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model, model_from_config
+from tensorflow.keras.models import load_model, model_from_json
 from tensorflow.keras.optimizers import Adamax
 from PIL import Image
 import os
@@ -17,11 +17,11 @@ def correct_dtypes(config):
 model_path = 'forex.h5'
 
 try:
-    # Load model with correction for dtype issues
+    # Load model and correct configuration
     loaded_model = load_model(model_path, compile=False)
-    model_config = loaded_model.get_config()
-    corrected_config = correct_dtypes(model_config)
-    loaded_model = model_from_config(corrected_config)
+    model_config = loaded_model.to_json()
+    corrected_config = correct_dtypes(tf.keras.models.model_from_json(model_config).get_config())
+    loaded_model = tf.keras.models.Model.from_config(corrected_config)
     loaded_model.compile(Adamax(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
     st.write("Model loaded and compiled successfully")
 except Exception as e:
