@@ -7,9 +7,18 @@ from PIL import Image
 
 # Load and compile the model
 model_path = 'forex.h5'
-loaded_model = load_model(model_path, compile=False)
-loaded_model.compile(Adamax(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
-st.write("Model loaded and compiled successfully")
+
+def print_layer_configurations(model):
+    for layer in model.layers:
+        st.write(layer.get_config())
+
+try:
+    loaded_model = load_model(model_path, compile=False)
+    print_layer_configurations(loaded_model)
+    loaded_model.compile(Adamax(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
+    st.write("Model loaded and compiled successfully")
+except Exception as e:
+    st.write(f"An error occurred: {e}")
 
 # Function to preprocess the image
 def preprocess_image(image):
