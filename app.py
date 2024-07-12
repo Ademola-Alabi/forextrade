@@ -84,3 +84,10 @@ st.sidebar.info("""
     This app uses a trained deep learning model to predict Forex trading signals.
     Upload an image to get a prediction of BUY or SELL.
 """)
+
+# Check and display library versions
+st.sidebar.title("Library Versions")
+st.sidebar.write(f"Streamlit version: {st.__version__}")
+st.sidebar.write(f"Numpy version: {np.__version__}")
+st.sidebar.write(f"TensorFlow version: {tf.__version__}")
+st.sidebar.write(f"Pillow version: {Image.__version__}")
